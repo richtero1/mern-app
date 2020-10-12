@@ -7,8 +7,7 @@ class App extends Component {
 
         this.t1;
         this.t2;
-        this.t;
-
+        this.t; 
 
         this.state = {
             first_name: '',
@@ -28,7 +27,6 @@ class App extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.addTask = this.addTask.bind(this);
     }
-
 
     handleChange(e) {
         const { name, value } = e.target;
@@ -139,10 +137,10 @@ class App extends Component {
 
     componentDidMount() {
         this.fetchTasks();
+        this.query();
     }
 
-    fetchTasks() {
-        //this.t1 = performance.now();
+    fetchTasks () {
 
         fetch('/api/tasks')
             .then(res => res.json())
@@ -150,9 +148,16 @@ class App extends Component {
                 this.setState({ tasks: data });
 
             });
-        //this.t2 = performance.now();
-        //this.t = this.t2 - this.t1;
-        //console.log(this.t);
+    }
+
+    query = () =>  {
+
+        fetch('/api/tasks/query')
+            .then(res => res.json())
+            .then(data => {
+                this.setState({ tasks: data });
+
+            });
     }
 
     render() {
@@ -248,7 +253,7 @@ class App extends Component {
                         </div>
                         <div className="col-1"></div>
                         <div className="col-3 text center">
-                            <button type="button" className="btn btn-success " > Ejecutar prueba</button>
+                            <button type="button" className="btn btn-success " onClick={this.query}> Ejecutar prueba</button>
                         </div>
                         <div className="col-2"></div>
                     </div>
