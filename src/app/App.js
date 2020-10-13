@@ -7,7 +7,7 @@ class App extends Component {
 
         this.t1;
         this.t2;
-        this.t; 
+        this.t;
 
         this.state = {
             first_name: '',
@@ -21,11 +21,11 @@ class App extends Component {
             city: '',
             state: '',
             _id: '',
-            tasks: [],
-            t: 0
+            tasks: []
         };
         this.handleChange = this.handleChange.bind(this);
         this.addTask = this.addTask.bind(this);
+        this.query = this.query.bind(this);
     }
 
     handleChange(e) {
@@ -68,7 +68,7 @@ class App extends Component {
                     this.fetchTasks();
                 });
             this.t2 = performance.now();
-            this.t = this.t2 - this.t1;
+            this.t = (this.t2 - this.t1).toFixed(3);
             console.log(this.t);
 
         } else {
@@ -91,7 +91,7 @@ class App extends Component {
                 })
                 .catch(err => console.error(err));
             this.t2 = performance.now();
-            this.t = this.t2 - this.t1;
+            this.t = (this.t2 - this.t1).toFixed(3);
             console.log(this.t);
         }
     }
@@ -110,7 +110,7 @@ class App extends Component {
                 this.fetchTasks();
             });
         this.t2 = performance.now();
-        this.t = this.t2 - this.t1;
+        this.t = (this.t2 - this.t1).toFixed(3);
         console.log(this.t);
     }
 
@@ -118,7 +118,6 @@ class App extends Component {
         fetch(`/api/tasks/${id}`)
             .then(res => res.json())
             .then(data => {
-
                 this.setState({
                     first_name: data.first_name,
                     last_name: data.last_name,
@@ -137,27 +136,28 @@ class App extends Component {
 
     componentDidMount() {
         this.fetchTasks();
-        this.query();
     }
 
-    fetchTasks () {
-
+    fetchTasks() {
         fetch('/api/tasks')
             .then(res => res.json())
             .then(data => {
                 this.setState({ tasks: data });
-
             });
     }
 
-    query = () =>  {
-
+    query() {
+        this.t1 = performance.now();
         fetch('/api/tasks/query')
             .then(res => res.json())
             .then(data => {
-                this.setState({ tasks: data });
-
+                this.setState({
+                    tasks: data
+                });
             });
+        this.t2 = performance.now();
+        this.t = (this.t2 - this.t1).toFixed(3);
+        console.log(this.t);
     }
 
     render() {
@@ -261,7 +261,7 @@ class App extends Component {
 
                 <div className="container">
                     <br />
-                    <h1>tiempo de respuesta: </h1>
+                    <h1>tiempo de respuesta: {this.t} ms.</h1>
                 </div>
 
                 <div className="container">
