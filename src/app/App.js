@@ -21,11 +21,12 @@ class App extends Component {
             city: '',
             state: '',
             _id: '',
-            tasks: []
+            docs: []
         };
         this.handleChange = this.handleChange.bind(this);
-        this.addTask = this.addTask.bind(this);
+        this.addDoc = this.addDoc.bind(this);
         this.query = this.query.bind(this);
+        this.fetchDocs = this.fetchDocs.bind(this); 
     }
 
     handleChange(e) {
@@ -35,12 +36,12 @@ class App extends Component {
         });
     }
 
-    addTask(e) {
+    addDoc(e) {
         e.preventDefault();
         if (this.state._id) {
             this.t1 = performance.now();
 
-            fetch(`/api/tasks/${this.state._id}`, {
+            fetch(`/api/employees/${this.state._id}`, {
                 method: 'PUT',
                 body: JSON.stringify({
                     first_name: this.state.first_name,
@@ -65,15 +66,14 @@ class App extends Component {
                         _id: '', first_name: '', last_name: '', email: '', birthdate: '',
                         gender: '', ssn: '', phone_number: '', department: '', city: '', state: ''
                     });
-                    this.fetchTasks();
+                    this.fetchDocs();
                 });
             this.t2 = performance.now();
             this.t = (this.t2 - this.t1).toFixed(3);
-            console.log(this.t);
 
         } else {
             this.t1 = performance.now();
-            fetch(`/api/tasks`, {
+            fetch(`/api/employees`, {
                 method: 'POST',
                 body: JSON.stringify(this.state),
                 headers: {
@@ -87,18 +87,17 @@ class App extends Component {
                         first_name: '', last_name: '', email: '', birthdate: '',
                         gender: '', ssn: '', phone_number: '', department: '', city: '', state: ''
                     });
-                    this.fetchTasks();
+                    this.fetchDocs();
                 })
                 .catch(err => console.error(err));
             this.t2 = performance.now();
             this.t = (this.t2 - this.t1).toFixed(3);
-            console.log(this.t);
         }
     }
 
-    deleteTask(id) {
+    deleteDoc(id) {
         this.t1 = performance.now();
-        fetch(`/api/tasks/${id}`, {
+        fetch(`/api/employees/${id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -107,15 +106,14 @@ class App extends Component {
         })
             .then(res => res.json())
             .then(data => {
-                this.fetchTasks();
+                this.fetchDocs();
             });
         this.t2 = performance.now();
         this.t = (this.t2 - this.t1).toFixed(3);
-        console.log(this.t);
     }
 
-    editTask(id) {
-        fetch(`/api/tasks/${id}`)
+    editDoc(id) {
+        fetch(`/api/employees/${id}`)
             .then(res => res.json())
             .then(data => {
                 this.setState({
@@ -135,29 +133,26 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.fetchTasks();
+        this.fetchDocs();
     }
 
-    fetchTasks() {
-        fetch('/api/tasks')
+    fetchDocs() {
+        fetch('/api/employees')
             .then(res => res.json())
             .then(data => {
-                this.setState({ tasks: data });
+                this.setState({ docs: data });
             });
     }
 
     query() {
         this.t1 = performance.now();
-        fetch('/api/tasks/query')
+        fetch('/api/employees/query')
             .then(res => res.json())
             .then(data => {
-                this.setState({
-                    tasks: data
-                });
+                this.setState({ docs: data });
             });
         this.t2 = performance.now();
         this.t = (this.t2 - this.t1).toFixed(3);
-        console.log(this.t);
     }
 
     render() {
@@ -174,7 +169,7 @@ class App extends Component {
                 </div>
 
                 <div className="container p-3">
-                    <form className="card - card-body" onSubmit={this.addTask}>
+                    <form className="card - card-body" onSubmit={this.addDoc}>
                         <div className="row">
                             <div className="col">
                                 <div className="form-group input-group">
@@ -249,7 +244,7 @@ class App extends Component {
                     <div className="row" >
                         <div className="col-3"></div>
                         <div className="col-3 ">
-                            <button type="button" className="btn btn-success " onClick={this.fetchTasks}> Obtener Todo</button>
+                            <button type="button" className="btn btn-success " onClick={this.fetchDocs}> Obtener Todo</button>
                         </div>
                         <div className="col-1"></div>
                         <div className="col-3 text center">
@@ -283,7 +278,7 @@ class App extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.tasks.map(employee => {
+                                {this.state.docs.map(employee => {
                                     return (
                                         <tr key={employee._id}>
                                             <td>{employee.first_name}</td>
@@ -297,8 +292,8 @@ class App extends Component {
                                             <td>{employee.city}</td>
                                             <td>{employee.state}</td>
                                             <td>
-                                                <i className="material-icons text-danger p-2" onClick={() => this.deleteTask(employee._id)}>close</i>
-                                                <i className="material-icons p-2" onClick={() => this.editTask(employee._id)}>create</i>
+                                                <i className="material-icons text-danger p-2" onClick={() => this.deleteDoc(employee._id)}>close</i>
+                                                <i className="material-icons p-2" onClick={() => this.editDoc(employee._id)}>create</i>
                                             </td>
                                         </tr>
                                     )

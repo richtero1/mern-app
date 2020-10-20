@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const TaskSchema = new Schema({
+const EmpSchema = new Schema({
   first_name: { type: String, required: true }, 
   last_name: { type: String, required: true }, 
   email: { type: String, required: true }, 
@@ -14,4 +14,4 @@ const TaskSchema = new Schema({
   state: { type: String, required: true }
 });
 
-module.exports = mongoose.model('Employee', TaskSchema);
+module.exports = mongoose.model('Employee', EmpSchema);
